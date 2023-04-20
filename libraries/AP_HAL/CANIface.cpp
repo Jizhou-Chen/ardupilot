@@ -18,25 +18,34 @@
 #include "CANIface.h"
 #include "system.h"
 #include <tiny-AES-c/aes.h>
+#include <stdio.h>
 
 const uint8_t encryption_key[16] = { 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0, 0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC, 0xDE, 0xF0 };
 
-void encrypt_message(uint8_t* message, uint32_t message_length, const uint8_t* key) {
-    struct AES_ctx ctx;
-    AES_init_ctx(&ctx, key);
+void encrypt_message(uint8_t* message, uint8_t message_length, const uint8_t* key) {
+    printf("CAN enc\n");
+    // uint8_t k = 0xFF;
+    // for (int i=0; i<message_length; i++)
+    // *message = *(message+i)^k;
+    // struct AES_ctx ctx;
+    // AES_init_ctx(&ctx, key);
 
-    for (uint32_t i = 0; i < message_length; i += 16) {
-        AES_ECB_encrypt(&ctx, message + i);
-    }
+    // for (uint32_t i = 0; i < message_length; i += 16) {
+    //     AES_ECB_encrypt(&ctx, message + i);
+    // }
 }
 
-void decrypt_message(uint8_t* message, uint32_t message_length, const uint8_t* key) {
-    struct AES_ctx ctx;
-    AES_init_ctx(&ctx, key);
+void decrypt_message(uint8_t* message, uint8_t message_length, const uint8_t* key) {
+    printf("CAN dec\n");
+    // uint8_t k = 0xFF;
+    // for (int i=0; i<message_length; i++)
+    // *message = *(message+i)^k;
+    // struct AES_ctx ctx;
+    // AES_init_ctx(&ctx, key);
 
-    for (uint32_t i = 0; i < message_length; i += 16) {
-        AES_ECB_decrypt(&ctx, message + i);
-    }
+    // for (uint32_t i = 0; i < message_length; i += 16) {
+    //     AES_ECB_decrypt(&ctx, message + i);
+    // }
 }
 
 bool AP_HAL::CANFrame::priorityHigherThan(const CANFrame& rhs) const
@@ -93,6 +102,7 @@ int16_t AP_HAL::CANIface::receive(CANFrame& out_frame, uint64_t& out_ts_monotoni
  */
 int16_t AP_HAL::CANIface::send(const CANFrame& frame, uint64_t tx_deadline, CanIOFlags flags)
 {
+    printf("CAN send\n");
     CANFrame encrypt_frame = frame;
     encrypt_message(encrypt_frame.data, encrypt_frame.dlc, encryption_key);
 
